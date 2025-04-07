@@ -1,23 +1,23 @@
 ![Method overview ](Method.png)
 
-# ProLEMB: Protein binding site prediction with protein language equivariant graph multi-task model
+# MPBind: Multitask Protein Binding Site Prediction by Protein Language Models and Equivariant Graph Neural Networks
 
-ProLEMB (Protein Language Equivariant Graph Multi-task Binding Site Prediction Model) is a parameter-free equivariant graph neural network designed to predict protein interaction interfaces from protein structures. It is available as a free online tool with no registration required.
+MPBind (Multitask Protein Binding Site Prediction by Protein Language Models and Equivariant Graph Neural Networks) is a parameter-free equivariant graph neural network designed to predict protein interaction interfaces from protein structures. It is available as a free online tool with no registration required.
 
 ## Installation
 Download the source code and examples by cloning the repository.
 ```
-git clone https://github.com/jianlin-cheng/ProLEMB.git
-cd ProLEMB
+git clone https://github.com/jianlin-cheng/MPBind.git
+cd MPBind
 ```
 
-The primary requirements for ProLEMB are [GEMMI](https://gemmi.readthedocs.io/en/latest/) to parse PDB files and [PyTorch](https://pytorch.org/) for the deep learning framework. During training, [h5py](https://www.h5py.org/) is used to store the processed data in an optimized format. The predicted interfaces can be visualized using [PyMOL](https://pymol.org/2/) or [ChimeraX](https://www.cgl.ucsf.edu/chimerax/). All the specific dependencies are listed in [ProLEMB.yml](ProLEMB.yml). The specific dependencies can be easily installed using [Anaconda](https://www.anaconda.com/). Create and activate the environement with:
+The primary requirements for MPBind are [GEMMI](https://gemmi.readthedocs.io/en/latest/) to parse PDB files and [PyTorch](https://pytorch.org/) for the deep learning framework. During training, [h5py](https://www.h5py.org/) is used to store the processed data in an optimized format. The predicted interfaces can be visualized using [PyMOL](https://pymol.org/2/) or [ChimeraX](https://www.cgl.ucsf.edu/chimerax/). All the specific dependencies are listed in [MPBind.yml](MPBind.yml). The specific dependencies can be easily installed using [Anaconda](https://www.anaconda.com/). Create and activate the environement with:
 
 ```bash
-conda env create -f ProLEMB.yml
-conda activate ProLEMB
+conda env create -f MPBind.yml
+conda activate MPBind
 ```
-**1.** Download the pre-trained ProtT5-XL-UniRef50 model in [here](https://zenodo.org/record/4644188) (~ 5.3 GB). The ProstT5 model will be automatically downloaded at the first time you run ProLEMB.  
+**1.** Download the pre-trained ProtT5-XL-UniRef50 model in [here](https://zenodo.org/record/4644188) (~ 5.3 GB) for ProtTrans model. The ProstT5 model will be automatically downloaded at the first time you run MPBind.  
 
 **2.** Set the `ProtTrans_path` variable in ([experiment/inference.py](experiment/inference.py)) or ([experiment/train.py](experiment/train.py) to specify the location of the pretrained ProtTrans model in Step 1.
 
@@ -44,13 +44,13 @@ We provide 4 variants of the trained ProLEMB models:
 - The `experiment` folder contains the scripts to train and inference the model.
 - The `weight` folder contains different verison of the trained ProLEMB models, we recomand use the best version 2 to do inference.
 
-## Inference by ProLEMB
+## Inference by MPBind
 
-The `ProLEMB` model can be applied to PDB files using the inference.py in the experiment folder. Specify the path to the folder containing the PDB files using the `input` variable. The predictions can be run on CPU or GPU. YOU can have a try with the provided example in `example` folder. All the generated intermediate information including prediction results will under the super folder `input` variable you provided.
+The `MPBind` model can be applied to PDB files using the inference.py in the experiment folder. Specify the path to the folder containing the PDB files using the `input` variable. The predictions can be run on CPU or GPU. YOU can have a try with the provided example in `example` folder. All the generated intermediate information including prediction results will under the super folder `input` variable you provided.
 
 ```bash
 # First step check the envirment whetther it is active, if not active the envirment 
-conda activate ProLEMB
+conda activate MPBind
 
 # Second step move to the experiment folder
 cd experiment
@@ -60,12 +60,12 @@ python inference.py --input [pdb_folder] --output [prediction_folder] --version 
 ```
 
 
-## Training ProLEMB by Yourself
-### If you want to retrain your own dataset, YOU can run `ProLEMB` by the following command:
+## Training MPBind by Yourself
+### If you want to retrain your own dataset, YOU can run `MPBind` by the following command:
 
 ```bash
 # First step check the envirment whetther it is active, if not active the envirment 
-conda activate ProLEMB
+conda activate MPBind
 
 # Second step move to the experiment folder
 cd experiment
@@ -117,6 +117,6 @@ This project is covered under the MIT License
 
 ## Reference
 
-#################################################################
+MPBind: Multitask Protein Binding Site Prediction by Protein Language Models and Equivariant Graph Neural Networks.
 
 

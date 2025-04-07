@@ -1,4 +1,4 @@
-name: ProLEMB
+name: MPBind
 channels:
   - pyg
   - bioconda
