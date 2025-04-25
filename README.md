@@ -80,8 +80,9 @@ python train.py --epochs [Number_epoch] --folder [intermediate_folder] --version
 ```bash
 # For inference:
 --input          # Name the folder Where the PDB files are located during inference.   
---output         # Name the folder Where the predictions should  be stored.
+--output         # Name the folder Where the predictions should  be stored, the predicted values will be saved in the B-factor field of the output PDB files.
 --version        # Specify the model version for inference.
+--binding_type   # Specify the binding types to infer as a list of integer values, 0: protein, 1:DNA/RNA, 2:ion, 3:ligand, 4:lipid.
 
 # For training: 
 --version        # Assign a name to the model version when training.

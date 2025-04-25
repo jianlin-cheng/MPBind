@@ -44,7 +44,8 @@ parser = argparse.ArgumentParser(description='Inference the ProLEMB with differe
 # initialize model with the following settings.
 parser.add_argument('--version', type=str, default="2", help='the trained model version selected to predict, default: 2, the best one')
 parser.add_argument('--input', type=str, default=f"example", help='The folder name where the pdb file is')
-parser.add_argument('--output', type=str, default=f"Prediction", help='The folder name where the predict output is')
+parser.add_argument('--binding_type', nargs='+', type=int, default=[0, ], help='List of integers for binding type, 0: protein, 1:DNA/RNA, 2: ion, 3: ligand, 4: lipid')
+parser.add_argument('--output', type=str, default=f"prediction", help='The folder name where the predict output is')
 parser.add_argument('--n_layers', type=int, default=4, help='number of layers for the EGLN')
 parser.add_argument('--attention', type=int, default=1, help='attention in the EGNN model')
 parser.add_argument('--node_dim', type=int, default=2247, help='Number of node features at input')
@@ -181,7 +182,20 @@ def inference(pdb_path, model_path, weight_name, version = "", predict_path = ""
             p = pt.sigmoid(z).detach()
         
             # Save the predicted result with its corresponding        
-            pt.save(p.cpu().float(), f"{predict_path}/{pdb_id}_v{version}.tensor")
+            # pt.save(p.cpu().float(), f"{predict_path}/{pdb_id[:-4]}_v{version}.tensor")
+
+            # Save the predicted result as pdb file with specific binding types
+            for btype in args.binding_type:
+                p = p[:, btype]
+                
+                # encode result
+                structure = encode_bfactor(filter_struc, p.cpu().numpy())
+
+                # save results in PDB format
+                filepath = f"{predict_path}/{pdb_id[:-4]}"
+
+                output_filepath = filepath +'_i{}_v{}.pdb'.format(btype, version)
+                save_pdb({cid0: structure}, output_filepath)
 
     print("Inference is done !!!")
        
