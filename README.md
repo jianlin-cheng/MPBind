@@ -9,6 +9,7 @@ Download the source code and examples by cloning the repository.
 ```
 git clone https://github.com/jianlin-cheng/MPBind.git
 cd MPBind
+
 ```
 
 The primary requirements for MPBind are [GEMMI](https://gemmi.readthedocs.io/en/latest/) to parse PDB files and [PyTorch](https://pytorch.org/) for the deep learning framework. During training, [h5py](https://www.h5py.org/) is used to store the processed data in an optimized format. The predicted interfaces can be visualized using [PyMOL](https://pymol.org/2/) or [ChimeraX](https://www.cgl.ucsf.edu/chimerax/). All the specific dependencies are listed in [MPBind.yml](MPBind.yml). The specific dependencies can be easily installed using [Anaconda](https://www.anaconda.com/). Create and activate the environement with:
@@ -58,8 +59,11 @@ cd experiment
 # Third step do the inference
 python inference.py --input [pdb_folder] --output [prediction_folder] --version [model_version] --bind_type 0
 
-# Example: Inferring protein–protein binding sites based on predicted AlphaFold 3 structures.
+# Example: Inferring protein–protein binding sites based on predicted AlphaFold 3 structures with one type of binding site.
 python inference.py --input AlphaFold3/folder0 --output p0 --version 2 --bind_type 0
+
+# Example: Inferring protein–protein binding sites based on predicted AlphaFold 3 structures with multiple type of binding sites.
+python inference.py --input AlphaFold3/folder0 --output pM --version 2 --bind_type 0 1 2 3
 
 ```
 
@@ -86,7 +90,7 @@ python train.py --epochs [Number_epoch] --folder [intermediate_folder] --version
 --input          # Name the folder Where the PDB files are located during inference.   
 --output         # Name the folder Where the predictions should  be stored, the predicted values will be saved in the B-factor field of the output PDB files.
 --version        # Specify the model version for inference.
---binding_type   # Specify the binding types to infer as a list of integer values, 0: protein, 1:DNA/RNA, 2:ion, 3:ligand, 4:lipid.
+--binding_type   # Specify the binding types to infer as a list of integer values (Space-Separated in command line), 0: protein, 1:DNA/RNA, 2:ion, 3:ligand, 4:lipid.
 
 # For training: 
 --version        # Assign a name to the model version when training.
