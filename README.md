@@ -36,7 +36,7 @@ conda activate MPBind
 
 - All the AlphaFold-predicted structures used can be downloaded freely from the [AlphaFold Protein Structure Database](https://alphafold.ebi.ac.uk/). Only the corresponding [UniProt](https://www.uniprot.org/) data is downloaded ([experiment/download_uniprot.py](experiment/download_uniprot.py)). 
 
-- All predicted human proteome interfaces used for analysis can be downloaded from [zenodo](https://zenodo.org/records/16748488).
+- All predicted human proteome interfaces used for analysis and the model itself can be downloaded from [zenodo](https://zenodo.org/records/17400473).
 
 - Finaly, we preprocess the structure, detect the interfaces within complexes and store the features and labels into an optimized HDF5 format ([experiment/build_dataset.py](experiment/build_dataset.py)).
 
