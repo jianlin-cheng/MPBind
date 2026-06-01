@@ -59,7 +59,7 @@ conda activate MPBind
 cd experiment
 
 # Third step do the inference
-python inference.py --input [pdb_folder] --output [prediction_folder] --version [model_version] --bind_type 0
+python inference.py --input [pdb_folder] --output [prediction_folder] --version [model_version] --binding_type 0
 
 # Example: Inferring protein–protein binding sites based on predicted AlphaFold 3 structures with one type of binding site.
 python inference.py --input AlphaFold3/folder0 --output p0 --version 2 --binding_type 0
