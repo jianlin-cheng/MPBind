@@ -18,15 +18,15 @@ The primary requirements for MPBind are [GEMMI](https://gemmi.readthedocs.io/en/
 conda env create -f MPBind.yml
 conda activate MPBind
 ```
-**1.** Download the pre-trained ProtT5-XL-UniRef50 model in [here](https://zenodo.org/record/4644188) (~ 5.3 GB) for ProtTrans model. The ProstT5 model will be automatically downloaded at the first time you run MPBind.  
+**1.** Download the pre-trained ProtT5-XL-UniRef50 model in [here](https://zenodo.org/record/4644188) (~ 5.3 GB) for ProtTrans model. The ProstT5 model will be automatically downloaded at the first time you run MPBind, users no additional actions needed.  
 
-**2.** Set the `ProtTrans_path` variable in ([experiment/inference.py](experiment/inference.py)) or ([experiment/train.py](experiment/train.py) to specify the location of the pretrained ProtTrans model in Step 1.
+**2.** Set the `ProtTrans_path` variable in ([experiment/inference.py](experiment/inference.py)) or ([experiment/train.py](experiment/train.py) to specify the location of the pretrained ProtTrans model in Step 1. We did it for you, users no additional actions needed.
 
-**3.** Set the `script_path` variable in ([experiment/inference.py](experiment/inference.py)) or ([experiment/train.py](experiment/train.py)) to the specific the directory containing the DSSP tool and Min-Max feature. By default, they should be in the same folder [src/feature_extraction](src/feature_extraction/).
+**3.** Set the `script_path` variable in ([experiment/inference.py](experiment/inference.py)) or ([experiment/train.py](experiment/train.py)) to the specific the directory containing the DSSP tool and Min-Max feature. By default, they should be in the same folder [src/feature_extraction](src/feature_extraction/). We did it for you, users no additional actions needed.
 
 **4.(optional)** Set the `file_path` variable in ([experiment/train.py](experiment/train.py)) to specify the pre-processed PDB file in HD5F format, if you want to train it by yourself.
 
-**5.** Add permission to execute for DSSP by `chmod +x $script_path/mkdssp`  
+**5.** Add permission to execute for DSSP by `chmod +x $script_path/mkdssp`, We did it for you, users no additional actions needed.  
 
 ## Available Dataset information used in our work
 
@@ -43,7 +43,7 @@ conda activate MPBind
 
 ## Other available pre-trained models
 
-We provide 4 variants of the trained ProLEMB models:
+We provide 4 variants of the trained MPBind models:
 - The `experiment` folder contains the scripts to train and inference the model.
 - The `weight` folder contains different verison of the trained ProLEMB models, we recomand use the best version 2 to do inference.
 
@@ -62,13 +62,22 @@ cd experiment
 python inference.py --input [pdb_folder] --output [prediction_folder] --version [model_version] --bind_type 0
 
 # Example: Inferring protein–protein binding sites based on predicted AlphaFold 3 structures with one type of binding site.
-python inference.py --input AlphaFold3/folder0 --output p0 --version 2 --bind_type 0
+python inference.py --input AlphaFold3/folder0 --output p0 --version 2 --binding_type 0
 
 # Example: Inferring protein–protein binding sites based on predicted AlphaFold 3 structures with multiple type of binding sites.
-python inference.py --input AlphaFold3/folder0 --output pM --version 2 --bind_type 0 1 2 3
+python inference.py --input AlphaFold3/folder0 --output pM --version 2 --binding_type 0 1 2 3
 
 ```
 
+## Visualize the predicted result in PDB format
+The predicted values are stored in the B-factor (temperature factor) column of the standard Protein Data Bank (PDB) file format, which occupies columns 61–66 in ATOM and HETATM records. To apply a three-color gradient spanning from blue (0.0) to white (0.5) to red (1.0), and to display an explicit legend in PyMOL, enter the following commands into the PyMOL command line:
+```bash
+# 1. Color the structure with a blue-white-red gradient locked to the 0 to 1 range
+spectrum b, blue_white_red, minimum=0, maximum=1
+
+# 2. Create an explicit color bar legend calibrated from 0 to 1
+ramp_new b_legend, none, [0, 0.5, 1], [blue, white, red]
+``` 
 
 ## Training MPBind by Yourself
 ### If you want to retrain your own dataset, YOU can run `MPBind` by the following command:

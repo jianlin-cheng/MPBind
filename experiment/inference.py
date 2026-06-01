@@ -24,6 +24,7 @@ from src.PDB_resfeature import PDBFeature, PDBResidueFeature   # get the residue
 from src.get_features import extract_feat, ProsT5_embedding
 
 from esm.data import read_fasta
+from huggingface_hub import snapshot_download
 import pyrootutils
 
 root = pyrootutils.setup_root(
@@ -38,6 +39,14 @@ root = pyrootutils.setup_root(
 ProtTrans_path = str(root) + "/src/ProtT5/prot_t5_xl_uniref50"  
 script_path = str(root) + "/src/feature_extraction"    # The folder where the Dssp tool and  Min-Max feature is in the same folder to normaliza the extract feature from ProtTrans 
 
+# automatically download prostT5
+if not os.path.exists(ProtTrans_path):
+        os.makedirs(ProtTrans_path, exist_ok = True)
+snapshot_download(
+    repo_id="Rostlab/prot_t5_xl_uniref50",
+    local_dir=ProtTrans_path,
+    local_dir_use_symlinks=False
+)
 
 parser = argparse.ArgumentParser(description='Inference the ProLEMB with different parameters.')
 
@@ -120,7 +129,7 @@ def inference(pdb_path, model_path, weight_name, version = "", predict_path = ""
         raise ValueError("Can not find the trained model, please check the path for it !!!")
  
 
-    # find pdb files and ignore already predicted oins
+    # find pdb files and ignore already predicted items
     pdb_filepaths = glob(os.path.join(pdb_path, "*.pdb"))
     if len(pdb_filepaths) > 1:
         print(f"The original PDB: {pdb_filepaths[0]}")
@@ -182,7 +191,7 @@ def inference(pdb_path, model_path, weight_name, version = "", predict_path = ""
             p = pt.sigmoid(z).detach()
         
             # Save the predicted result with its corresponding        
-            # pt.save(p.cpu().float(), f"{predict_path}/{pdb_id[:-4]}_v{version}.tensor")
+            pt.save(p.cpu().float(), f"{predict_path}/{pdb_id[:-4]}_v{version}.tensor")
 
             # Save the predicted result as pdb file with specific binding types
             for btype in args.binding_type:
