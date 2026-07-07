@@ -13,7 +13,7 @@ sys.path.append('../')
 
 from src.structure import clean_structure, tag_hetatm_chains, split_by_chain, filter_non_atomic_subunits, remove_duplicate_tagged_subunits
 from src.data_encoding import config_encoding, encode_structure, encode_features, extract_topology, extract_all_contacts
-from src.dataset import StructuresDataset, save_data
+from src.dataset import StructuresDatasetOld, save_data
 
 pt.multiprocessing.set_sharing_strategy('file_system')
 
@@ -204,7 +204,7 @@ def store_dataset_items(hf, pdbid, bid, structures_data, contacts_data):
 
 def build_dataset():
     # set up dataset
-    dataset = StructuresDataset(config_dataset['pdb_filepaths'], with_preprocessing=False)
+    dataset = StructuresDatasetOld(config_dataset['pdb_filepaths'], with_preprocessing=False)
 
     # print(f'-------- The dataset shape is {len(dataset)} -------\n')
 

@@ -5,6 +5,73 @@ from gemmi import cif
 from Bio.PDB import PDBParser
 
 
+def read_header(pdb_filepath):
+    
+    # read header
+    with gzip.open(pdb_filepath, "rt") as cif_file:
+        structure = PDBParser(QUIET=True).get_structure('structure', cif_file)  # structure id
+        header = structure.header  #header section gives us experimental information rather than structure information
+        
+    # read pdb
+    doc = gemmi.read_pdb(pdb_filepath, max_line_length=80)
+
+    
+    # altloc memory
+    altloc_l = []
+    icodes = []
+
+    # data storage
+    atom_element = []
+    atom_name = []
+    atom_xyz = []
+    residue_name = []
+    seq_id = []
+    het_flag = []
+    chain_name = []
+    # parse structure
+    for mid, model in enumerate(doc):
+        for a in model.all():
+            # altloc check (keep first encountered)
+            if a.atom.has_altloc():
+                key = f"{a.chain.name}_{a.residue.seqid.num}_{a.atom.name}"
+                if key in altloc_l:
+                    continue
+                else:
+                    altloc_l.append(key)
+
+            # insertion code (skip)
+            icodes.append(a.residue.seqid.icode.strip())
+
+            # store data
+            atom_element.append(a.atom.element.name)
+            atom_name.append(a.atom.name)
+            atom_xyz.append([a.atom.pos.x, a.atom.pos.y, a.atom.pos.z])
+            residue_name.append(a.residue.name)
+            seq_id.append(a.residue.seqid.num)
+            het_flag.append(a.residue.het_flag)  # whether is in the standard residues
+            chain_name.append(f"{a.chain.name}:{mid}")  # chain
+            # chain_name.append(a.chain.name)
+
+            
+            
+    info = {
+        'resolution': header['resolution'] if 'resolution' in header else -1,
+        'deposition_date': header['deposition_date'] if 'deposition_date' in header else '',
+    }
+    # pack data
+    ret = {
+        'xyz': np.array(atom_xyz, dtype=np.float32),
+        'name': np.array(atom_name),
+        'element': np.array(atom_element),
+        'resname': np.array(residue_name),
+        'resid': np.array(seq_id, dtype=np.int32),
+        'het_flag': np.array(het_flag),
+        'chain_name': np.array(chain_name),
+        'icode': np.array(icodes),
+    }
+    # print(f" $$$$$$$$$$$$ the chain_name: {ret} &&&&&\n")
+    return info, ret 
+
 def read_pdb(pdb_filepath):
 
     '''

@@ -1,7 +1,7 @@
 import numpy as np
 import torch as pt
 
-from .structure_io import read_pdb
+from .structure_io import read_pdb, read_header
 from .structure import clean_structure, tag_hetatm_chains, split_by_chain, filter_non_atomic_subunits, remove_duplicate_tagged_subunits
 
 
@@ -209,6 +209,49 @@ class StructuresDataset(pt.utils.data.Dataset):
         # parse pdb
         try:
             structure = read_pdb(pdb_filepath)
+        except Exception as e:
+            print(f"ReadError: {pdb_filepath}: {e}")
+            return None, pdb_filepath
+
+        if self.with_preprocessing:
+            # process structure
+            structure = clean_structure(structure)
+
+            # update molecules chains
+            structure = tag_hetatm_chains(structure)
+
+            # split structure
+            subunits = split_by_chain(structure)
+
+            # remove non atomic structures
+            subunits = filter_non_atomic_subunits(subunits)
+
+            # remove duplicated molecules and ions
+            subunits = remove_duplicate_tagged_subunits(subunits)
+
+            return subunits, pdb_filepath
+        else:
+            return structure, pdb_filepath
+# StructuresDatasetOld
+class StructuresDatasetOld(pt.utils.data.Dataset):
+    def __init__(self, pdb_filepaths, with_preprocessing=True):
+        super(StructuresDataset).__init__()
+        # store dataset filepath
+        self.pdb_filepaths = pdb_filepaths
+
+        # store flag
+        self.with_preprocessing = with_preprocessing
+
+    def __len__(self):
+        return len(self.pdb_filepaths)
+
+    def __getitem__(self, i):
+        # find pdb filepath
+        pdb_filepath = self.pdb_filepaths[i]
+
+        # parse pdb
+        try:
+            structure = read_header(pdb_filepath)
         except Exception as e:
             print(f"ReadError: {pdb_filepath}: {e}")
             return None, pdb_filepath
